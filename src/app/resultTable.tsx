@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -25,26 +25,6 @@ interface TablePaginationActionsProps {
     newPage: number,
   ) => void;
 }
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}));
 
 function TablePaginationActions(props: TablePaginationActionsProps) {
   const theme = useTheme();
@@ -102,31 +82,37 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
   );
 }
 
-function createResultData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-) {
-  return { name, calories, fat, carbs, protein };
-}
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
 
-const rows = [
-  createResultData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createResultData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createResultData('Eclair', 262, 16.0, 24, 6.0),
-  createResultData('Cupcake', 305, 3.7, 67, 4.3),
-  createResultData('Gingerbread', 356, 16.0, 49, 3.9),
-];
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
 
-export default function CustomizedTables(Props: {dateFrom:String, dateTo:String}) {
+export default function CustomizedTables(Props: {sclResultList: {}}) {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [resultList, setResultList] = React.useState({});
 
   const emptyRows =
-  page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  page > 0 ? Math.max(0, (1 + page) * rowsPerPage - Props.sclResultList.length) : 0;
+
+  useEffect(() => {
+    setResultList(Props.sclResultList);
+  }, [Props.sclResultList]);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -138,7 +124,7 @@ export default function CustomizedTables(Props: {dateFrom:String, dateTo:String}
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    setRowsPerPage(parseInt(event.target.value, 5));
     setPage(0);
   };
 
@@ -157,34 +143,36 @@ export default function CustomizedTables(Props: {dateFrom:String, dateTo:String}
           </TableRow>
         </TableHead>
         <TableBody>
-          {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map((row) => (
-            <TableRow key={row.name}>
-              <TableCell>
-                {row.PNAME}
-              </TableCell>
-              <TableCell>
-                {row.CHARTNO}
-              </TableCell>
-              <TableCell>
-                {row.HITEMCODE}
-              </TableCell>
-              <TableCell>
-                {row.HITEMNAME}
-              </TableCell>
-              <TableCell>
-                {row.INSUCODE}
-              </TableCell>
-              <TableCell>
-                {row.ORDDATE}
-              </TableCell>
-              <TableCell>
-                {row.ORDNO}
-              </TableCell>
-            </TableRow>
-          ))}
+          {(JSON.stringify(resultList) !== '{}') ?
+            (rowsPerPage > 0
+              ? resultList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : resultList
+            ).map((row, index) => (
+              <TableRow key={index}>
+                <TableCell>
+                  {row.PNAME}
+                </TableCell>
+                <TableCell>
+                  {row.CHARTNO}
+                </TableCell>
+                <TableCell>
+                  {row.HITEMCODE}
+                </TableCell>
+                <TableCell>
+                  {row.HITEMNAME}
+                </TableCell>
+                <TableCell>
+                  {row.INSUCODE}
+                </TableCell>
+                <TableCell>
+                  {row.ORDDATE}
+                </TableCell>
+                <TableCell>
+                  {row.ORDNO}
+                </TableCell>
+              </TableRow>
+            )) : null
+          }
           {emptyRows > 0 && (
             <TableRow style={{ height: 53 * emptyRows }}>
               <TableCell colSpan={6} />
@@ -194,9 +182,9 @@ export default function CustomizedTables(Props: {dateFrom:String, dateTo:String}
         <TableFooter>
           <TableRow>
             <TablePagination
-              rowsPerPageOptions={[10, 25, 50, { label: 'All', value: -1 }]}
+              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
               colSpan={3}
-              count={rows.length}
+              count={resultList.length}
               rowsPerPage={rowsPerPage}
               page={page}
               slotProps={{
