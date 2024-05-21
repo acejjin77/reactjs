@@ -1,14 +1,14 @@
 'use client'
 
 import * as React from 'react';
-import ResultTable from './resultTable';
+import ResultView from './resultView';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 
 export default function PersistentDrawerLeft() {
-    
+  
   const [dateFrom, setDateFrom] = React.useState('');
   const [dateTo, setDateTo] = React.useState('');
   const [sclResultList, setSclResultList] = React.useState({});
@@ -51,35 +51,35 @@ async function getSclResult() {
         noValidate
         autoComplete="off"
         onSubmit={e => {
-            getSclResult()
-            e.preventDefault()
-          }}
-        >
-          <TextField
-            id="filled-basic-from"
-            label="From"
-            variant="filled"
-            helperText="YYYY-MM-DD"
-            value={dateFrom}
-            onInput={(e: React.ChangeEvent<HTMLInputElement>) => setDateFrom(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && e.preventDefault()}
-          />
-          <TextField
-            id="filled-basic-to"
-            label="To"
-            variant="filled"
-            helperText="YYYY-MM-DD"
-            value={dateTo}
-            onInput={(e: React.ChangeEvent<HTMLInputElement>) => setDateTo(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && e.preventDefault()}
-          />
-          <Button 
-            variant="contained"
-            sx={{ margin: 4 }}
-            type='submit'
-          >결과조회</Button>
-        </Box>
-      <ResultTable sclResultList={sclResultList}/>
+          getSclResult()
+          e.preventDefault()
+        }}
+      >
+        <TextField
+          id="filled-basic-from"
+          label="From"
+          variant="filled"
+          helperText="YYYY-MM-DD"
+          value={dateFrom}
+          onInput={(e: React.ChangeEvent<HTMLInputElement>) => setDateFrom(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && e.preventDefault()}
+        />
+        <TextField
+          id="filled-basic-to"
+          label="To"
+          variant="filled"
+          helperText="YYYY-MM-DD"
+          value={dateTo}
+          onInput={(e: React.ChangeEvent<HTMLInputElement>) => setDateTo(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && e.preventDefault()}
+        />
+        <Button 
+          variant="contained"
+          sx={{ margin: 4 }}
+          type='submit'
+        >결과조회</Button>
+      </Box>
+      <ResultView sclResultList={sclResultList}/>
     </>
   )
 }

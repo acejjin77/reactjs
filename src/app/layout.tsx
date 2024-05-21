@@ -14,13 +14,12 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import PageContent from './page';
-import theme from '@/theme';
 
 const drawerWidth = 240;
 
+
+// 메인 컨텐츠
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
 }>(({ theme, open }) => ({
@@ -40,6 +39,8 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   }),
 }));
 
+
+// 상단 메뉴 바
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
@@ -61,6 +62,8 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
+
+// 좌측 사이드 바
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -75,12 +78,8 @@ export default function Layout() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
+  const handleDrawerChange = () => {
+    setOpen(!open);
   };
 
   return (
@@ -93,14 +92,15 @@ export default function Layout() {
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <Box sx={{ display: 'flex' }}>
+              {/* 상단 메뉴 바 컴포넌트 시작 */}
               <AppBar position="fixed" open={open} sx={{ bgcolor: "white" }}>
                 <Toolbar>
                   <IconButton
                     color="default"
                     aria-label="open drawer"
-                    onClick={handleDrawerOpen}
+                    onClick={handleDrawerChange}
                     edge="start"
-                    sx={{ mr: 2, ...(open && { display: 'none' }) }}
+                    sx={{ mr: 2 }}
                   >
                     <MenuIcon />
                   </IconButton>
@@ -109,6 +109,10 @@ export default function Layout() {
                   </Typography>
                 </Toolbar>
               </AppBar>
+              {/* 상단 메뉴 바 컴포넌트 종료 */}
+
+              
+              {/* 좌측 사이드 바 컴포넌트 시작 */}
               <Drawer
                 sx={{
                   width: drawerWidth,
@@ -122,11 +126,6 @@ export default function Layout() {
                 anchor="left"
                 open={open}
               >
-                <DrawerHeader>
-                  <IconButton onClick={handleDrawerClose}>
-                    {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                  </IconButton>
-                </DrawerHeader>
                 <Divider />
                 <List>
 
@@ -136,10 +135,14 @@ export default function Layout() {
 
                 </List>
               </Drawer>
+              {/* 좌측 사이드 바 컴포넌트 종료 */}
+
+              {/* 메인 컨텐츠 시작 */}
               <Main open={open}>
                 <DrawerHeader />
                 <PageContent />
               </Main>
+              {/* 메인 컨텐츠 종료 */}
             </Box>
           </ThemeProvider>
         </AppRouterCacheProvider>
