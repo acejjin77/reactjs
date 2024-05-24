@@ -142,7 +142,7 @@ export default function CustomizedTables(Props: {sclResultList: {}}) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {(JSON.stringify(resultList) !== '{}') ?
+              {!resultList || Object.keys(resultList).length === 0 ? null :
                 (rowsPerPage > 0
                   ? resultList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   : resultList
@@ -176,7 +176,7 @@ export default function CustomizedTables(Props: {sclResultList: {}}) {
                       {row.ORDNO}
                     </TableCell>
                   </TableRow>
-                )) : null
+                ))
               }
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
@@ -189,7 +189,7 @@ export default function CustomizedTables(Props: {sclResultList: {}}) {
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                   colSpan={3}
-                  count={resultList.length}
+                  count={!resultList || Object.keys(resultList).length === 0 ? 0 : resultList.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   slotProps={{

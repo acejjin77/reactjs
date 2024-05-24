@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react';
+import Head from 'next/head';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,10 +15,9 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import PageContent from './page';
+import "@/components/globals.css";
 
 const drawerWidth = 240;
-
 
 // 메인 컨텐츠
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -62,31 +62,46 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-
 // 좌측 사이드 바
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
   justifyContent: 'flex-end',
 }));
 
-export default function Layout() {
+const metadata = {
+  title: 'SCL',
+  description: 'SCL',
+};
+
+export default function Layout({
+  children,
+}: {
+  children: React.ReactNode,
+}) {
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [mounted, setMounted] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleDrawerChange = () => {
     setOpen(!open);
   };
 
-  return (
+  return (mounted &&
     <html lang="ko">
-      <head>
-        <title>SCL</title>
-      </head>
+        <Head>
+          <title>
+            SCL
+          </title>
+          <meta name="description" content={metadata.description} />
+        </Head>
       <body>
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
@@ -105,12 +120,11 @@ export default function Layout() {
                     <MenuIcon />
                   </IconButton>
                   <Typography variant="h6" noWrap component="div" sx={{ color: "black" }}>
-                    SCL 결과조회
+                    {metadata.title}
                   </Typography>
                 </Toolbar>
               </AppBar>
               {/* 상단 메뉴 바 컴포넌트 종료 */}
-
               
               {/* 좌측 사이드 바 컴포넌트 시작 */}
               <Drawer
@@ -140,7 +154,7 @@ export default function Layout() {
               {/* 메인 컨텐츠 시작 */}
               <Main open={open}>
                 <DrawerHeader />
-                <PageContent />
+                {children}
               </Main>
               {/* 메인 컨텐츠 종료 */}
             </Box>
