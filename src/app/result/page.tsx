@@ -21,26 +21,22 @@ export default function PageContent() {
     }
   };
 
-  React.useEffect(() => {
-    async function getSclResult() {
-      try {
-        const requestOptions = {
-          result_kind: 1,
-          date_kind : 2,
-          date_from : dateFrom,
-          date_to : dateTo,
-          send_kind : 0
-        };
+  async function getSclResult() {
+    try {
+      const requestOptions = {
+        result_kind: 1,
+        date_kind : 2,
+        date_from : dateFrom,
+        date_to : dateTo,
+        send_kind : 0
+      };
 
-        const response = await axios.post('/scl/ResultApiSvr', requestOptions, axiosConfig);
-        setSclResultList(response.data.PATIENT_LIST);
-      } catch (error) {
-        console.error('API 호출 에러 ', error);
-      }
+      const response = await axios.post('/scl/ResultApiSvr', requestOptions, axiosConfig);
+      setSclResultList(response.data.PATIENT_LIST);
+    } catch (error) {
+      console.error('API 호출 에러 ', error);
     }
-
-    getSclResult();
-  }, [dateFrom, dateTo]); 
+  }
 
   return (
     <Box>
@@ -62,7 +58,6 @@ export default function PageContent() {
           helperText="YYYY-MM-DD"
           value={dateFrom}
           onInput={(e: React.ChangeEvent<HTMLInputElement>) => setDateFrom(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && e.preventDefault()}
         />
         <TextField
           id="filled-basic-to"
@@ -71,7 +66,6 @@ export default function PageContent() {
           helperText="YYYY-MM-DD"
           value={dateTo}
           onInput={(e: React.ChangeEvent<HTMLInputElement>) => setDateTo(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && e.preventDefault()}
         />
         <Button 
           variant="contained"

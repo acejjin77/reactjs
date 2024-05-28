@@ -1,10 +1,9 @@
-import Layout from '@/app/layout';
 import PageContent from './page';
 
 export default function ResultPage() {
   return (
-    <Layout>
+    <section>
       <PageContent />
-    </Layout>
+    </section>
   )
 }
