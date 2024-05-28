@@ -127,7 +127,7 @@ export default function CustomizedTables(Props: {sclResultList: {}}) {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={8}>
+      <Grid item xs={6}>
         <TableContainer component={Paper}>
           <Table aria-label="SCL 결과리스트">
             <TableHead>
@@ -211,7 +211,7 @@ export default function CustomizedTables(Props: {sclResultList: {}}) {
       </Grid>
       { JSON.stringify(selectedData) != '{}'
         ?
-      <Grid item xs={4}>
+      <Grid item xs={6}>
         <Grid container xs={12} spacing={4}>
           <Grid item xs={4}>
             <Typography paragraph>{ selectedData.PNAME }</Typography>
